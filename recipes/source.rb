@@ -40,7 +40,7 @@ end
 node.set['nginx']['binary']          = "#{node['nginx']['source']['prefix']}/sbin/nginx"
 node.set['nginx']['daemon_disable']  = true
 
-include_recipe "nginx::ohai_plugin"
+#include_recipe "nginx::ohai_plugin"
 include_recipe "build-essential"
 
 src_filepath  = "#{Chef::Config['file_cache_path'] || '/tmp'}/nginx-#{node['nginx']['version']}.tar.gz"
@@ -98,6 +98,14 @@ node.run_state.delete(:nginx_configure_flags)
 node.run_state.delete(:nginx_force_recompile)
 
 case node['nginx']['init_style']
+when "upstart"
+  node.set['nginx']['src_binary'] = node['nginx']['binary']
+
+
+  service "nginx" do
+    supports :status => true, :restart => true, :reload => true
+    provider Chef::Provider::Service::Upstart
+  end  
 when "runit"
   node.set['nginx']['src_binary'] = node['nginx']['binary']
   include_recipe "runit"
