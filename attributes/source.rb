@@ -21,6 +21,10 @@
 
 include_attribute 'nginx'
 
+## NOTE! 
+## No idea why there is a prefix and dir config option? 
+## Directory in which to install nginx, standard nginx install defaults this to /usr/local/nginx
+
 default['nginx']['source']['prefix']                  = "/opt/nginx-#{node['nginx']['version']}"
 default['nginx']['source']['conf_path']               = "#{node['nginx']['dir']}/nginx.conf"
 default['nginx']['source']['default_configure_flags'] = [

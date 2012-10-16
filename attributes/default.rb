@@ -33,7 +33,6 @@ case node['platform']
 when "ubuntu"
   default['nginx']['user']       = "nginx"
   default['nginx']['init_style'] = "upstart"
-
 when "debian"
   default['nginx']['user']       = "www-data"
   default['nginx']['init_style'] = "runit"
