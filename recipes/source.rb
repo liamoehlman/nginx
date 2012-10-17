@@ -22,8 +22,7 @@
 #
 
 
-nginx_url = node['nginx']['source']['url'] ||
-  "http://nginx.org/download/nginx-#{node['nginx']['version']}.tar.gz"
+nginx_url = "http://nginx.org/download/nginx-#{node['nginx']['version']}.tar.gz"
 
 unless(node['nginx']['source']['prefix'])
   node.set['nginx']['source']['prefix'] = "/opt/nginx-#{node['nginx']['version']}"
@@ -34,7 +33,7 @@ end
 unless(node['nginx']['source']['default_configure_flags'])
   node.set['nginx']['source']['default_configure_flags'] = [
     "--prefix=#{node['nginx']['source']['prefix']}",
-    "--conf-path=#{node['nginx']['dir']}/nginx.conf"
+    "--conf-path=#{node['nginx']['source']['conf_path']}"
   ]
 end
 node.set['nginx']['binary']          = "#{node['nginx']['source']['prefix']}/sbin/nginx"
@@ -53,10 +52,9 @@ packages.each do |devpkg|
   package devpkg
 end
 
-remote_file nginx_url do
+remote_file "#{Chef::Config['file_cache_path']}/nginx-#{node['nginx']['version']}.tar.gz" do
   source nginx_url
   checksum node['nginx']['source']['checksum']
-  path src_filepath
   backup false
 end
 
@@ -78,20 +76,22 @@ configure_flags = node.run_state['nginx_configure_flags']
 nginx_force_recompile = node.run_state['nginx_force_recompile']
 
 bash "compile_nginx_source" do
-  cwd ::File.dirname(src_filepath)
+  cwd Chef::Config['file_cache_path']
   code <<-EOH
-    tar zxf #{::File.basename(src_filepath)} -C #{::File.dirname(src_filepath)}
+    tar zxf nginx-#{node['nginx']['version']}.tar.gz
     cd nginx-#{node['nginx']['version']} && ./configure #{node.run_state['nginx_configure_flags'].join(" ")}
     make && make install
     rm -f #{node['nginx']['dir']}/nginx.conf
   EOH
 
+=begin
   not_if do
     nginx_force_recompile == false &&
       node.automatic_attrs['nginx'] &&
       node.automatic_attrs['nginx']['version'] == node['nginx']['version'] &&
       node.automatic_attrs['nginx']['configure_arguments'].sort == configure_flags.sort
   end
+=end
 end
 
 node.run_state.delete(:nginx_configure_flags)

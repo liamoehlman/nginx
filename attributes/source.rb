@@ -27,10 +27,7 @@ include_attribute 'nginx'
 
 default['nginx']['source']['prefix']                  = "/opt/nginx-#{node['nginx']['version']}"
 default['nginx']['source']['conf_path']               = "#{node['nginx']['dir']}/nginx.conf"
-default['nginx']['source']['default_configure_flags'] = [
-  "--prefix=#{node['nginx']['source']['prefix']}",
-  "--conf-path=#{node['nginx']['dir']}/nginx.conf"
-]
+
 
 default['nginx']['configure_flags']  = Array.new
 default['nginx']['source']['url']     = "http://nginx.org/download/nginx-#{node['nginx']['version']}.tar.gz"

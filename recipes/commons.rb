@@ -46,8 +46,14 @@ end
   end
 end
 
+if (node['nginx']['source']['conf_path'])
+  conf_path = node['nginx']['source']['conf_path']
+else
+  conf_path = "#{node['nginx']['dir']}/nginx.conf"
+end
+
 template "nginx.conf" do
-  path "#{node['nginx']['dir']}/nginx.conf"
+  path conf_path
   source "nginx.conf.erb"
   owner "root"
   group "root"

@@ -40,5 +40,6 @@ bash "extract_redis2_module" do
   not_if { ::File.exists?(redis2_extract_path) }
 end
 
+
 node.run_state['nginx_configure_flags'] =
-  ["--add-module=#{redis2_extract_path}/redis2-#{node['nginx']['redis2']['version']}"] | node.run_state['nginx_configure_flags']
+  node.run_state['nginx_configure_flags'] | ["--add-module=#{redis2_extract_path}"]
