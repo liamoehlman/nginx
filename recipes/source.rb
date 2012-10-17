@@ -101,6 +101,10 @@ case node['nginx']['init_style']
 when "upstart"
   node.set['nginx']['src_binary'] = node['nginx']['binary']
 
+  template "/etc/init/nginx" do
+    source "nginx.upstart.erb"
+    mode 0644
+  end
 
   service "nginx" do
     supports :status => true, :restart => true, :reload => true
