@@ -101,7 +101,7 @@ case node['nginx']['init_style']
 when "upstart"
   node.set['nginx']['src_binary'] = node['nginx']['binary']
 
-  template "/etc/init/nginx" do
+  template "/etc/init/nginx.conf" do
     source "nginx.upstart.erb"
     mode 0644
   end
