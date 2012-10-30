@@ -20,6 +20,10 @@
 
 include_recipe 'nginx::ohai_plugin'
 
+if node['platform'] == "ubuntu"
+  node.set['nginx']['user'] = "www-data"
+end
+
 case node['nginx']['install_method']
 when 'source'
   include_recipe 'nginx::source'
