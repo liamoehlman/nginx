@@ -32,7 +32,7 @@ default['nginx']['binary'] = "/usr/sbin/nginx"
 case node['platform']
 when "ubuntu"
   default['nginx']['user']       = "nginx"
-  default['nginx']['init_style'] = "upstart"
+  default['nginx']['init_style'] = "init"
 when "debian"
   default['nginx']['user']       = "www-data"
   default['nginx']['init_style'] = "runit"
